@@ -189,7 +189,7 @@ let searchSP = async () => {
 
     renderProduct(satisfied);
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching product:", error);
   } finally {
     turnOffLoading();
   }
@@ -255,7 +255,7 @@ let addToCart = (id) => {
   let product = reversedProducts.find((item) => item.id == id);
 
   if (!product) {
-    console.error("Error: Product not found with ID:", id);
+    console.error("Error: Product not found:", id);
     return;
   }
 
@@ -309,12 +309,17 @@ let renderCart = () => {
                             <button class="btn btn-success" onclick="increaseQuantity(${
                               cartItem.id
                             })">
-                                Add
+                                +
                             </button>
                             <button class="btn btn-warning" onclick="decreaseQuantity(${
                               cartItem.id
                             })">
-                                Decrease
+                                -
+                            </button>
+                            <button class="btn btn-danger" onclick="removeProduct(${
+                              cartItem.id
+                            })">
+                                X
                             </button>
                         </td>
                 </tr>`;
@@ -331,10 +336,7 @@ let renderCart = () => {
 };
 
 let increaseQuantity = (id) => {
-  console.log(id);
   let cartItem = cart.find((item) => item.id == id);
-  console.log(cartItem);
-
   if (cartItem) {
     cartItem.quantity++;
 
@@ -343,11 +345,21 @@ let increaseQuantity = (id) => {
   }
 };
 
+// xoá sản phẩm
+let removeProduct = (id) => {
+  let productIndex = cart.findIndex((item) => item.id == id);
+
+  if (productIndex !== -1) {
+    cart.splice(productIndex, 1);
+    saveCartsToLocal();
+    renderCart();
+  } else {
+    console.error("Product not found");
+  }
+};
+
 let decreaseQuantity = (id) => {
-  console.log(id);
-
   let cartItem = cart.find((item) => item.id == id);
-
   if (cartItem) {
     if (cartItem.quantity > 0) {
       cartItem.quantity--;
